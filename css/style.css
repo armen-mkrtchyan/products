@@ -1,0 +1,27 @@
+.menu_style{
+    height: 400px;
+    background-color: slategray;
+}
+.menu_style h3{
+    color:white;
+}
+
+.ex{
+    background-color: red;
+}
+.ex:hover{
+    background-color: red;
+}
+.links_one{
+    margin-top: 80px;
+}
+.content{
+    background-color: antiquewhite;
+}
+.act{
+    text-decoration: none;
+}
+.act.active{
+    text-decoration: underline;
+    color:red;
+}
