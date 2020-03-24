@@ -87,6 +87,7 @@ $count =  $countPage->fetchAll(PDO::FETCH_ASSOC)[0]["count"];
 $pagesCount = ceil($count / $notesOnePage);
 
     for($i = 1;$i <= $pagesCount;$i++){
+        if($pagesCount == 1) break;
         if($page == $i){
             echo "<a href='?page=$i' class='act'>$i </a>";
         }else{

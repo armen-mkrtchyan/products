@@ -58,8 +58,6 @@ if (!empty($_SESSION["login"]) && $_SESSION["bool"] == true) {
     $Cok = $_COOKIE["Cookie_key"];
     $Cname = $_COOKIE["name"];
     echo "<pre>";
-    var_dump($Cok);
-    var_dump($Cname);
     $stmt = $conn->prepare("SELECT * FROM `users`");
     $stmt->execute();
 

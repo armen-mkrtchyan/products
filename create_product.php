@@ -4,6 +4,11 @@ include "connect.php";
 $pro = $conn->prepare("SELECT * FROM categories");
 $pro->execute();
 $result = $pro->fetchAll(PDO::FETCH_ASSOC);
+
+$mod = $conn->prepare("SELECT * from models");
+$mod->execute();
+$models = $mod->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!doctype html>
@@ -26,8 +31,12 @@ $result = $pro->fetchAll(PDO::FETCH_ASSOC);
                 <label for="">New Product</label>
             <input type="text" class="form-control" name="pro" placeholder="Enter new product">
             </div>
-            <label for="">Product Model</label>
-            <input type="text" class="form-control" name="name" placeholder="Enter a Model">
+            <label for="exampleFormControlSelect1">PRODUCT  model</label>
+            <select class="form-control" id="selectmodel" name="model">
+                <?php foreach ($models as $m):?>
+                    <option value="<?=$m['id']?>"><?=$m['name']?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
         <div class="form-group">
             <label for="exampleFormControlSelect1">Example select</label>
@@ -40,13 +49,13 @@ $result = $pro->fetchAll(PDO::FETCH_ASSOC);
             <input type="text" class="form-control" name="img" placeholder="Enter a Image path">
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="0">
             <label class="form-check-label" for="exampleRadios1">
                 Old
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="1">
             <label class="form-check-label" for="exampleRadios2">
                 New
             </label>
@@ -56,7 +65,7 @@ $result = $pro->fetchAll(PDO::FETCH_ASSOC);
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="desc"></textarea>
         </div>
         <label for="">Product Price</label>
-        <input type="text" class="form-control" name="price" placeholder="Enter a price">
+        <input type="number" class="form-control" name="price" placeholder="Enter a price">
 
         <button class="btn btn-primary mt-2" type="submit" name="submit">Submit</button>
 
@@ -66,18 +75,19 @@ $result = $pro->fetchAll(PDO::FETCH_ASSOC);
 
 <?php if(isset($_POST['submit'])) {
     $product = $_POST['pro'];
-    $model = $_POST['name'];
+    $model_id = $_POST['model'];
+    $category_id = $_POST['sel'];
     $img_path = $_POST['img'];
     $old = $_POST['exampleRadios'];
     $desc = $_POST['desc'];
     $price = $_POST['price'];
 
-    $newProduct = $conn->prepare("INSERT INTO `product`
-(`name`,category_id,model_id,img_path,isNew,desc_info,price,create_time,update_time,)
- VALUES ('$product','$img_path','$model','$old','$desc','$price',now(),now())");
+    $q = "INSERT INTO `product` (`name`,`img_path`,`isNew`, `model_id` ,`category_id`,`desc_info`,`price`,`create_time`,`update_time`) 
+    VALUES ('$product','$img_path',$old,$model_id,$category_id,'$desc','$price',now(),now())";
 
+    $newProduct = $conn->prepare($q);
 
-    $conn->exec($newProduct);
+    $newProduct->execute();
     header("Location:product.php");
 
 }

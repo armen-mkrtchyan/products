@@ -1,0 +1,137 @@
+<?php
+ob_start();
+include "connect.php";
+
+$i = $_GET["product"];
+$productQuery = $conn->query("SELECT
+`pro`.*, `cate`.`name` AS `cate_name`, `model`.`name`  AS `mode_name` 
+FROM
+`product` AS `pro`
+LEFT JOIN `categories` AS `cate` ON `pro`.category_id = `cate`.id
+LEFT JOIN `models` AS `model` ON `pro`.`model_id` = `model`.`id` where `pro`.`id`='$i'");
+
+$productQuery->execute();
+$result = $productQuery->fetchAll(PDO::FETCH_ASSOC);
+
+
+$pro = $conn->prepare("SELECT * FROM categories");
+$pro->execute();
+$cat = $pro->fetchAll(PDO::FETCH_ASSOC);
+
+$mod = $conn->prepare("SELECT * FROM models");
+$mod->execute();
+$models = $mod->fetchAll(PDO::FETCH_ASSOC);
+?>
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+</head>
+<body>
+<div class="container">
+
+
+    <a href="product.php">back</a>
+    <form action="" method="post">
+        <div class="form-group">
+            <div class="mb-4">
+                <label for="">Edit product</label>
+                <input type="text" class="form-control" value="<?= $result[0]["name"]?>" name="pro" placeholder="Enter a new product">
+            </div>
+            <label for="exampleFormControlSelect1">Edit category</label>
+            <select class="form-control" id="selectmodel" name="sel">
+                <?php foreach ($cat as $r): ?>
+                    <option value="<?= $r['id'] ?>"><?= $r['name'] ?></option>
+                <?php endforeach; ?>
+            </select>
+
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Edit model</label>
+            <select class="form-control" id="exampleFormControlSelect1" name="model">
+                <?php foreach ($models as $m): ?>
+                    <option value="<?=$m['id']?>"><?=$m['name']?></option>
+                <?php endforeach;?>
+            </select>
+            <label for="">Edit Image</label>
+            <input type="text" class="form-control" value="<?= $result[0]["img_path"]?>" name="img" placeholder="Enter a Image path">
+        </div>
+        <label for="">Edit is_new</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="0" <?= !$result[0]["isNew"] == true ? 'checked' : ''?>>
+            <label class="form-check-label" for="exampleRadios1">
+                Old
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="1" <?= $result[0]["isNew"] == true ? 'checked' : ''?>>
+            <label class="form-check-label" for="exampleRadios2">
+                New
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Edit desc</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="desc"><?= $result[0]["desc_info"]?></textarea>
+        </div>
+        <label for="">Edit Price</label>
+        <input type="number" class="form-control" value="<?= $result[0]["price"]?>" name="price" placeholder="Enter a price">
+
+        <button class="btn btn-primary mt-2" type="submit" name="submit">Submit</button>
+
+    </form>
+
+</div>
+
+<?php if (isset($_POST['submit'])) {
+    $product = $_POST['pro'];
+    $model_id = $_POST['model'];
+    $category_id = $_POST['sel'];
+    $img_path = $_POST['img'];
+    $old = $_POST['exampleRadios'];
+    $desc = $_POST['desc'];
+    $price = $_POST['price'];
+    $id = $_GET["product"];
+
+    $q = "UPDATE `product` SET 
+        `name` = '$product', 
+        `model_id` = '$model_id', 
+        `category_id`='$category_id', 
+         `img_path`='$img_path', 
+         `isNew`='$old', 
+        `desc_info`='$desc', 
+        `price`='$price'
+        WHERE (`id` = $id);";
+
+    $newProduct = $conn->prepare($q);
+    $newProduct->execute();
+    header("Location:product.php");
+
+}
+?>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+
+
+

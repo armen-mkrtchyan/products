@@ -1,11 +1,25 @@
 <?php
 ob_start();
 include 'connect.php';
-$cat = $conn->prepare("SELECT * FROM categories");
+
+if (isset($_GET['page'])) {
+    $page = $_GET['page'];
+} else {
+    $page = 1;
+}
+
+$notesOnePage = 4;
+
+$from = ($page - 1) * $notesOnePage;
+
+
+$cat = $conn->prepare("SELECT * FROM categories LIMIT $from,$notesOnePage");
 $cat->execute();
 $result = $cat->fetchAll(PDO::FETCH_ASSOC);
 //include 'admin.php'
-//    ?>
+
+
+ ?>
     <!doctype html>
     <html lang="en">
     <head>
@@ -27,7 +41,7 @@ $result = $cat->fetchAll(PDO::FETCH_ASSOC);
     <?php include "admin.php"; ?>
 
 <div class="col-10">
-
+    <a class="btn btn-primary mb-2" href="create_cat.php" role="button">Create Category</a>
         <table class="table table-striped">
 
             <thead>
@@ -59,7 +73,24 @@ $result = $cat->fetchAll(PDO::FETCH_ASSOC);
 
             </tbody>
         </table>
-        <a class="btn btn-primary" href="create_cat.php" role="button">Create Categorie</a>
+<?php $countPage = $conn->query("SELECT COUNT(id) as count FROM `categories`");
+
+
+$countPage->execute();
+
+$count =  $countPage->fetchAll(PDO::FETCH_ASSOC)[0]["count"];
+$pagesCount = ceil($count / $notesOnePage);
+
+for($i = 1;$i <= $pagesCount;$i++){
+    if($pagesCount == 1) break;
+    if($page == $i){
+        echo "<a href='?page=$i' class='act'>$i </a>";
+    }else{
+        echo "<a href='?page=$i'>$i </a>";
+    }
+
+
+} ?>
 
     <script>
         $('.change').on('click', function () {
