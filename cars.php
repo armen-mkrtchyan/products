@@ -13,7 +13,7 @@ $notesOnePage = 4;
 $from = ($page - 1) * $notesOnePage;
 
 
-$cat = $conn->prepare("SELECT * FROM categories LIMIT $from,$notesOnePage");
+$cat = $conn->prepare("SELECT * FROM `categories` ORDER BY id DESC LIMIT $from,$notesOnePage");
 $cat->execute();
 $result = $cat->fetchAll(PDO::FETCH_ASSOC);
 //include 'admin.php'

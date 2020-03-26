@@ -15,12 +15,10 @@ $from = ($page - 1) * $notesOnePage;
 $models_category = $conn->query("SELECT  `mod`.*, `cat`.`name` AS `cat_name`
 FROM `models` AS `mod`
          LEFT JOIN `categories` AS `cat`
-                   ON `mod`.`category_id` = `cat`.`id`  LIMIT $from,$notesOnePage");
+                   ON `mod`.`category_id` = `cat`.`id` ORDER BY `id` DESC LIMIT $from,$notesOnePage");
 $models_category->execute();
 $arrModels = $models_category->fetchAll(PDO::FETCH_ASSOC);
 
-
-//var_dump($pagesCount);
 
 ?>
 <!doctype html>

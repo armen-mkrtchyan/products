@@ -18,7 +18,7 @@ $models_category = $conn->query("SELECT
 FROM
 `product` AS `pro`
 LEFT JOIN `categories` AS `cate` ON `pro`.category_id = `cate`.id
-LEFT JOIN `models` AS `model` ON `pro`.`model_id` = `model`.`id` LIMIT $from,$notesOnePage");
+LEFT JOIN `models` AS `model` ON `pro`.`model_id` = `model`.`id` ORDER BY id DESC LIMIT $from,$notesOnePage");
 
 $models_category->execute();
 $result = $models_category->fetchAll(PDO::FETCH_ASSOC);

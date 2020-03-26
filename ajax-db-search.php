@@ -5,7 +5,7 @@ if (isset($_POST['query'])) {
 //var_dump($id);
     $query = $conn->prepare("SELECT * FROM `product` WHERE `name`  LIKE '{$_POST['query']}%'");
     $query->execute();
-//LIKE '{$_POST['query']}%'
+
 
 
     if ($query->rowCount() > 0) {

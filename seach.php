@@ -27,24 +27,25 @@
 
     }
 
-    function update() {
+    function update(m) {
         let idCh = $(this).attr("data-id");
-        let id = $(this).closest("tr")[0].cells[0].innerText;
+        let id = $(this).closest("tr").innerText;
         // console.log(id);
-        let pro_name = $(this).closest("tr")[0].cells[1].innerText;
-        let cat_name = $(this).closest("tr")[0].cells[2].innerText;
-        let mod_name = $(this).closest("tr")[0].cells[3].innerText;
-        let is_new = $(this).closest("tr")[0].cells[4].innerText;
-        let price = $(this).closest("tr")[0].cells[5].innerText;
-        let image = $(this).closest("tr")[0].cells[6].innerText;
-        let desc = $(this).closest("tr")[0].cells[7].innerText;
-        //
-        window.location = `edit_product.php?product=${id}`;
+        let pro_name = $(this).closest("tr").innerText;
+        let cat_name = $(this).closest("tr").innerText;
+        let mod_name = $(this).closest("tr").innerText;
+        let is_new = $(this).closest("tr").innerText;
+        let price = $(this).closest("tr").innerText;
+        let image = $(this).closest("tr").innerText;
+        let desc = $(this).closest("tr").innerText;
+
+        window.location = `edit_product.php?product=${m}`;
 
 
     }
-
     $(document).ready(function(){
+
+
 
         $("#search").keyup(function(){
             var query = $(this).val();
@@ -55,6 +56,7 @@
                     dataType:'json',
                     data: {query:query},
                     success:function(data){
+                        console.log(data);
                         if(data){
 
 
@@ -98,7 +100,7 @@
                 <td>${i.create_time}</td>
                 <td>${i.update_time}</td>
                 <td>
-                    <button type="button" class="change" onclick="update()" data-id="${i.id}"><i
+                    <button type="button" class="change" onclick="update(${i.id})" data-id="${i.id}"><i
                                 class="fa fa-pencil-square-o edit" aria-hidden="true"></i>
                     </button>
                 </td>
